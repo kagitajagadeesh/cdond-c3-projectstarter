@@ -289,18 +289,12 @@ jobs:
           fingerprints: ["6d:ae:0a:03:73:a8:6c:de:55:9a:3f:92:ae:ba:ed:6a"]
       # - attach_workspace:
       #     at: ~/project/.circleci/ansible
-      # - run:
-      #     name: install dependencies
-      #     command: |
-      #       apk add --update ansible
-      #       pip install awscli --upgrade
-      #       apk add --update nodejs npm
-      # - run:
-      #     name: install dependencies
-      #     command: |
-      #       apk add --update ansible
-      #       pip install awscli --upgrade
-      #       apk add --update nodejs npm
+      - run:
+          name: install dependencies
+          command: |
+            apk add --update ansible
+            pip install awscli --upgrade
+            apk add --update nodejs npm
       - run:
           name: Deploy backend
           command: |
