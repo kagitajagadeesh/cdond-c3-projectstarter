@@ -177,9 +177,9 @@ jobs:
             --query 'Reservations[*].Instances[*].PublicDnsName' \
             --output text >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
-          root: ~/
+          root: ~/project/.circleci/ansible
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - .
       - run:
           name: print inventory file
           command: |
