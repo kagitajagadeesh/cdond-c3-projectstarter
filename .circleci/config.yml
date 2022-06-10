@@ -173,13 +173,17 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             aws ec2 describe-instances \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --output text >> .circleci/ansible/inventory.txt
+            --filters Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7} \
+            --query 'Reservations[*].Instances[*].PublicDnsName' \
+            --output text >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
+      - run:
+          name: print inventory file
+          command: |
+            cat ~/project/.circleci/ansible/inventory.txt
       - destroy-environment
 
   configure-infrastructure:
@@ -197,18 +201,6 @@ jobs:
           command: |
             # Your code here
             apk add --update ansible
-      - run:
-          name: Install ansible
-          command: |
-            # your code here              
-            apk add --update ansible 
-            ansible --version
-      - run:
-          name: Install aws
-          command: |
-            # your code here
-            pip install awscli --upgrade
-            aws --version
       - run:
           name: Configure server
           command: |
@@ -440,8 +432,8 @@ workflows:
           requires: [build-backend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      - configure-infrastructure:
-          requires: [deploy-infrastructure]
+      # - configure-infrastructure:
+      #     requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
