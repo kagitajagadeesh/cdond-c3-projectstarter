@@ -221,6 +221,7 @@ jobs:
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
+            ANSIBLE_HOST_KEY_CHECKING=False 
             ansible-playbook -i inventory.txt configure-server.yml
             #ansible-playbook -vvvv -i inventory.txt ansible/roles/configure-server/tasks/main.yml -u ubuntu
       - destroy-environment
@@ -456,4 +457,4 @@ workflows:
       # - cloudfront-update:
       #     requires: [smoke-test]
       # - cleanup:
-          requires: [cloudfront-update]
+      #    requires: [cloudfront-update]
