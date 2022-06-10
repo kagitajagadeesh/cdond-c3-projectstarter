@@ -185,7 +185,7 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
       - add_ssh_keys:
@@ -193,10 +193,6 @@ jobs:
       - attach_workspace:
           at: ~/
           # - run: cat ~/output.txt 
-      - run:
-          name: Install dependencies
-          command: |
-            yum install -y tar gzip
       - run:
           name: Install dependencies
           command: |
