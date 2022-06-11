@@ -33,7 +33,7 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = $(curl --insecure  https://kvdb.io/JyhYADNX8auDGGArr3joq/migration_<< parameters.workflow_id >>)
+            SUCCESS = $(curl --insecure  https://kvdb.io/77J8ENAoT2fwWCPVu9mE7w/migration_<< parameters.workflow_id >>)
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -331,8 +331,8 @@ jobs:
           command: |
             apk add --update curl nodejs npm
             pip install awscli --upgrade
-      # - attach_workspace:
-      #     at: ~/project/.circleci/ansible
+      - attach_workspace:
+          at: ~/project/.circleci/ansible
       - run:
           name: Backend smoke test.
           command: |
@@ -352,7 +352,7 @@ jobs:
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-              return 0
+              return 1
             else
               return 1
             fi
