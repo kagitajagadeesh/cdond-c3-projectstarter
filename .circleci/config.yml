@@ -54,7 +54,7 @@ jobs:
       - run:
           name: Build front-end
           command: |
-            export TEST=1
+            TEST=1
             if(( $TEST==1 ));
             then:
               return 1
