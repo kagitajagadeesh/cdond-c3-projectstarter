@@ -32,15 +32,16 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
+            echo "Destroying environment: << parameters.workflow_id >> "
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            #SUCCESS=$(curl --insecure  https://kvdb.io/77J8ENAoT2fwWCPVu9mE7w/migration_<< parameters.workflow_id >>)
-            SUCCESS=1
+            SUCCESS=$(curl --insecure  https://kvdb.io/77J8ENAoT2fwWCPVu9mE7w/migration_<< parameters.workflow_id >>)
+            #SUCCESS=1
             echo "success value: ${SUCCESS}"
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
               npm install
-              npm run migration:revert
+              npm run migrations:revert
             fi
           
 jobs:
