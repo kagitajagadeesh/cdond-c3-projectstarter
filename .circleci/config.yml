@@ -33,7 +33,9 @@ commands:
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = $(curl --insecure  https://kvdb.io/77J8ENAoT2fwWCPVu9mE7w/migration_<< parameters.workflow_id >>)
+            SUCCESS=$(curl --insecure  https://kvdb.io/77J8ENAoT2fwWCPVu9mE7w/migration_<< parameters.workflow_id >>)
+            echo "success value: ${SUCCESS}"
+            #SUCCESS = 1
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -58,6 +60,7 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
+      - revert-migrations
 
   test-frontend:
     docker:
