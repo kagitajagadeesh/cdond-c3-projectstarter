@@ -23,17 +23,17 @@ commands:
   
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
-    # parameters:
-    #   workflow_id: 
-    #     type: string
-    #     default: ${CIRCLE_WORKFLOW_ID:0:7}
+    parameters:
+      workflow_id: 
+        type: string
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
           name: Revert migrations
           when: on_fail
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=$(curl --insecure  https://kvdb.io/77J8ENAoT2fwWCPVu9mE7w/migration_execute)
+            SUCCESS=$(curl --insecure  https://kvdb.io/77J8ENAoT2fwWCPVu9mE7w/<< parameters.workflow_id >>)
             #SUCCESS=1
             echo "success value: ${SUCCESS}"
             if(( $SUCCESS==1 )); 
@@ -42,6 +42,37 @@ commands:
               npm install
               npm run migrations:revert
             fi
+  trigger_slack_notification:
+    steps:
+      - slack/notify:
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": "*This is a text notification*",
+                      "emoji": true
+                    }
+                  ]
+                }
+              ]
+            }
+          event: always
+
+  notify_slack_error:
+    steps:
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
+  notify_slack_pass:
+    steps:
+      - slack/notify:
+          event: pass
+          template: basic_success_1
           
 jobs:
   build-frontend:
@@ -54,9 +85,13 @@ jobs:
       - run:
           name: Build front-end
           command: |
-            cd frontend
-            npm install
-            npm run build
+            TEST=1
+            if(( $TEST==1 )); 
+            then
+              return 1
+            # cd frontend
+            # npm install
+            # npm run build
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -238,8 +273,8 @@ jobs:
           command: |   
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-                # If you are using kvdb.io, generate the bucket ID "JyhYADNX8auDGGArr3joq" in your local terminal first
-                curl https://kvdb.io/JyhYADNX8auDGGArr3joq/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+                # If you are using kvdb.io, generate the bucket ID "77J8ENAoT2fwWCPVu9mE7w" in your local terminal first
+                curl https://kvdb.io/77J8ENAoT2fwWCPVu9mE7w/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi  
       - destroy-environment
 
