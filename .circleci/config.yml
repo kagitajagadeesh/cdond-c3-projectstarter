@@ -193,7 +193,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["6d:ae:0a:03:73:a8:6c:de:55:9a:3f:92:ae:ba:ed:6a"]
+          fingerprints: ["53:87:5b:92:cd:de:d5:57:96:be:04:d7:65:77:bc:83"]
       - attach_workspace:
           at: ~/project/.circleci/ansible
       - run:
@@ -207,7 +207,7 @@ jobs:
           command: |
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
-      #- destroy-environment
+      - destroy-environment
 
   run-migrations:
     docker:
@@ -285,7 +285,7 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - add_ssh_keys:
-          fingerprints: ["6d:ae:0a:03:73:a8:6c:de:55:9a:3f:92:ae:ba:ed:6a"]
+          fingerprints: ["53:87:5b:92:cd:de:d5:57:96:be:04:d7:65:77:bc:83"]
       - attach_workspace:
           at: ~/project/.circleci/ansible
       - run:
